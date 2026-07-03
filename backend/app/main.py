@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from app.exceptions import AppError
+from app.api import students
 
 app = FastAPI(title="减肥教练助手", version="0.1.0")
 
@@ -33,3 +34,7 @@ async def validation_handler(request: Request, exc: RequestValidationError) -> J
 async def health() -> dict:
     """健康检查（无需鉴权）。"""
     return {"status": "ok"}
+
+
+# 业务路由（统一 /api/v1 前缀）
+app.include_router(students.router, prefix="/api/v1")
