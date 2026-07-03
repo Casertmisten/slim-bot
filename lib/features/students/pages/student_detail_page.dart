@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/responsive.dart';
+import '../../../features/records/body_metric/body_metric_tab.dart';
+import '../../../features/records/daily_log/daily_log_tab.dart';
 import '../../../features/records/weight/weight_tab.dart';
 import '../providers/student_providers.dart';
 import '../widgets/student_header.dart';
@@ -78,8 +80,8 @@ class _DetailTabsState extends ConsumerState<_DetailTabs>
               children: [
                 const Center(child: Text('档案')),
                 WeightTab(studentId: widget.id),
-                const Center(child: Text('围度（阶段3实现）')),
-                const Center(child: Text('饮食运动（阶段3实现）')),
+                BodyMetricTab(studentId: widget.id),
+                DailyLogTab(studentId: widget.id),
                 const Center(child: Text('对话（阶段4实现）')),
               ],
             ),
