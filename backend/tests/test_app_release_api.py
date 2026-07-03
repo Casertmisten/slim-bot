@@ -39,3 +39,24 @@ def test_upload_and_check():
     v = client.get("/api/v1/app/version").json()
     assert v["version"] == "1.0.1"
     assert v["force_update"] is False
+
+
+def test_download_apk():
+    """上传后能通过 /app/version 返回的 url 下载到 apk。"""
+    apk = io.BytesIO(b"fake apk content")
+    upload = client.post(
+        "/api/v1/app/upload",
+        data={"version": "1.0.1", "version_code": 2, "force_update": "false"},
+        files={"file": ("app.apk", apk, "application/octet-stream")},
+        headers=AUTH,
+    ).json()
+    rid = upload["id"]
+    # /app/version 给出的 url 指向 download 端点
+    url = client.get("/api/v1/app/version").json()["url"]
+    assert url == f"/api/v1/app/download/{rid}"
+    # 下载（公开，无需鉴权）
+    r = client.get(url)
+    assert r.status_code == 200
+    assert r.content == b"fake apk content"
+    # 不存在的版本
+    assert client.get("/api/v1/app/download/9999").status_code == 404
