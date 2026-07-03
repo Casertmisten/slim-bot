@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/responsive.dart';
+import '../../../features/records/weight/weight_tab.dart';
 import '../providers/student_providers.dart';
 import '../widgets/student_header.dart';
 
@@ -74,12 +75,12 @@ class _DetailTabsState extends ConsumerState<_DetailTabs>
             child: TabBarView(
               controller: _tab,
               // 占位：后续阶段填充真实内容
-              children: const [
-                Center(child: Text('档案')),
-                Center(child: Text('体重（阶段3实现）')),
-                Center(child: Text('围度（阶段3实现）')),
-                Center(child: Text('饮食运动（阶段3实现）')),
-                Center(child: Text('对话（阶段4实现）')),
+              children: [
+                const Center(child: Text('档案')),
+                WeightTab(studentId: widget.id),
+                const Center(child: Text('围度（阶段3实现）')),
+                const Center(child: Text('饮食运动（阶段3实现）')),
+                const Center(child: Text('对话（阶段4实现）')),
               ],
             ),
           ),
