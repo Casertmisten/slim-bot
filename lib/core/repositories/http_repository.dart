@@ -180,32 +180,34 @@ class HttpRepository implements Repository {
     final buffer = StringBuffer();
     await for (final bytes in stream) {
       buffer.write(utf8.decode(bytes, allowMalformed: true));
-      final text = buffer.toString();
-      final lastNewline = text.lastIndexOf('\n');
-      if (lastNewline < 0) continue; // 还没有完整行，继续等下个分片
-      final complete = text.substring(0, lastNewline);
-      buffer.clear();
-      buffer.write(text.substring(lastNewline + 1));
-      for (final line in complete.split('\n')) {
-        if (!line.startsWith('data:')) continue;
-        final payload = line.substring(5).trim();
-        if (payload.isEmpty) continue;
-        final obj = jsonDecode(payload) as Map<String, dynamic>;
-        if (obj['type'] == 'chunk') {
-          onChunk(obj['content'] as String);
-        }
+      // 处理缓冲中所有完整行，保留尾部不完整的行等待下次拼接
+      while (true) {
+        final text = buffer.toString();
+        final lastNewline = text.lastIndexOf('\n');
+        if (lastNewline < 0) break;
+        final line = text.substring(0, lastNewline);
+        buffer.clear();
+        buffer.write(text.substring(lastNewline + 1));
+        _handleSseLine(line, onChunk);
       }
     }
     // 刷新缓冲中最后残留的行（无尾随换行的情况）
-    final tail = buffer.toString();
-    if (tail.startsWith('data:')) {
-      final payload = tail.substring(5).trim();
-      if (payload.isNotEmpty) {
-        final obj = jsonDecode(payload) as Map<String, dynamic>;
-        if (obj['type'] == 'chunk') {
-          onChunk(obj['content'] as String);
-        }
-      }
+    _handleSseLine(buffer.toString(), onChunk);
+  }
+
+  /// 解析单行 SSE data 负载。chunk → 回调；error → 抛异常（让上层 UI 提示）。
+  void _handleSseLine(String line, void Function(String) onChunk) {
+    if (!line.startsWith('data:')) return;
+    final payload = line.substring(5).trim();
+    if (payload.isEmpty) return;
+    final obj = jsonDecode(payload) as Map<String, dynamic>;
+    switch (obj['type']) {
+      case 'chunk':
+        onChunk(obj['content'] as String);
+      case 'error':
+        // SSE 无法在中途改 HTTP 状态码，后端用 200 + error 事件表达失败，
+        // 这里抛异常让 chat_page 的 catch 显示 SnackBar。
+        throw Exception(obj['message'] ?? 'AI 服务出错');
     }
   }
 }
