@@ -77,7 +77,6 @@ class _DetailTabsState extends ConsumerState<_DetailTabs>
             padding: EdgeInsets.all(contentMargin(context)),
             child: TabBarView(
               controller: _tab,
-              // 占位：后续阶段填充真实内容
               children: [
                 const Center(child: Text('档案')),
                 WeightTab(studentId: widget.id),

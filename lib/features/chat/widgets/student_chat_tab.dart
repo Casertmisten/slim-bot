@@ -39,6 +39,8 @@ class StudentChatTab extends ConsumerWidget {
               final s = await ref.read(repositoryProvider).createChatSession(
                     ChatSessionInput(studentId: studentId),
                   );
+              // 刷新该学员的会话列表缓存，返回时列表能反映新会话
+              ref.invalidate(chatSessionListProvider(studentId));
               if (context.mounted) context.push('/chat/${s.id}');
             },
             child: const Icon(Icons.add),
