@@ -7,6 +7,7 @@ from app.model.base import Base, TimestampMixin
 from app.model.student import Student
 from app.model.record import WeightRecord, BodyMetricRecord, DailyLog
 from app.model.chat_history import ChatSession, ChatMessage
+from app.model.app_release import AppRelease
 
 __all__ = [
     "Base",
@@ -17,4 +18,5 @@ __all__ = [
     "DailyLog",
     "ChatSession",
     "ChatMessage",
+    "AppRelease",
 ]
