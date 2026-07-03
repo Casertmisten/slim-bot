@@ -1,0 +1,16 @@
+[Unit]
+Description=减肥教练助手后端
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/slim-coach/backend
+# git pull 后 systemd 重启即生效
+ExecStart=/opt/slim-coach/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=3
+EnvironmentFile=/opt/slim-coach/backend/.env
+
+[Install]
+WantedBy=multi-user.target
