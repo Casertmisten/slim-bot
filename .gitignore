@@ -1,0 +1,29 @@
+
+# FVM Version Cache
+.fvm/
+
+# Flutter / Dart 构建产物
+.dart_tool/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+pubspec.lock
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# FVM 配置文件
+.fvmrc
+
+# macOS
+.DS_Store
+
+# 临时文件
+*.log
