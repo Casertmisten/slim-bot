@@ -1,6 +1,6 @@
-# slim_bot
+# slim-bot
 
-A new Flutter project.
+减肥营销Agent
 
 ## Getting Started
 
