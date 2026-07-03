@@ -14,8 +14,8 @@ class AppColors {
   // 文本
   static const onSurface = Color(0xFF191C1B);
   static const onSurfaceVariant = Color(0xFF40493D);
-  static const outline = Color(0xFFBFCAB9); // 卡片/输入描边
-  static const outlineVariant = Color(0xFFE0E4E0);
+  static const outline = Color(0xFF707A6C); // 卡片/输入描边（DESIGN outline）
+  static const outlineVariant = Color(0xFFBFCAB9); // 更浅描边变体（DESIGN outline-variant）
 
   // 品牌色
   static const primary = Color(0xFF0B6B1D); // 主操作

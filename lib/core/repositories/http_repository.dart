@@ -176,12 +176,31 @@ class HttpRepository implements Repository {
           headers: {'Accept': 'text/event-stream'}),
     );
     final stream = response.data!.stream;
+    // 用缓冲拼接跨 TCP 分片的不完整行，避免丢 token。
+    final buffer = StringBuffer();
     await for (final bytes in stream) {
-      final text = utf8.decode(bytes);
-      for (final line in text.split('\n')) {
+      buffer.write(utf8.decode(bytes, allowMalformed: true));
+      final text = buffer.toString();
+      final lastNewline = text.lastIndexOf('\n');
+      if (lastNewline < 0) continue; // 还没有完整行，继续等下个分片
+      final complete = text.substring(0, lastNewline);
+      buffer.clear();
+      buffer.write(text.substring(lastNewline + 1));
+      for (final line in complete.split('\n')) {
         if (!line.startsWith('data:')) continue;
         final payload = line.substring(5).trim();
         if (payload.isEmpty) continue;
+        final obj = jsonDecode(payload) as Map<String, dynamic>;
+        if (obj['type'] == 'chunk') {
+          onChunk(obj['content'] as String);
+        }
+      }
+    }
+    // 刷新缓冲中最后残留的行（无尾随换行的情况）
+    final tail = buffer.toString();
+    if (tail.startsWith('data:')) {
+      final payload = tail.substring(5).trim();
+      if (payload.isNotEmpty) {
         final obj = jsonDecode(payload) as Map<String, dynamic>;
         if (obj['type'] == 'chunk') {
           onChunk(obj['content'] as String);
