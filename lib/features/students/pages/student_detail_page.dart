@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/responsive.dart';
+import '../../../features/chat/widgets/student_chat_tab.dart';
 import '../../../features/records/body_metric/body_metric_tab.dart';
 import '../../../features/records/daily_log/daily_log_tab.dart';
 import '../../../features/records/weight/weight_tab.dart';
@@ -82,7 +83,7 @@ class _DetailTabsState extends ConsumerState<_DetailTabs>
                 WeightTab(studentId: widget.id),
                 BodyMetricTab(studentId: widget.id),
                 DailyLogTab(studentId: widget.id),
-                const Center(child: Text('对话（阶段4实现）')),
+                StudentChatTab(studentId: widget.id),
               ],
             ),
           ),
