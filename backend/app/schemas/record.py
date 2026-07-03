@@ -25,7 +25,7 @@ class WeightOut(BaseModel):
 class BodyMetricCreate(BaseModel):
     record_date: date
     metric_type: str = Field(..., min_length=1, max_length=30)
-    value: float
+    value: float = Field(..., ge=0)
     unit: str = Field(..., max_length=10)
 
 
