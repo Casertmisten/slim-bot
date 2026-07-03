@@ -55,7 +55,7 @@ async def send_message(
                 yield f"data: {json.dumps({'type': 'error', 'message': e.message}, ensure_ascii=False)}\n\n"
             except Exception:
                 # LLM 或其他异常 → SSE error
-                yield "data: {json.dumps({'type': 'error', 'message': 'AI 服务暂时不可用'}, ensure_ascii=False)}\n\n"
+                yield 'data: {"type":"error","message":"AI 服务暂时不可用"}\n\n'
 
     return StreamingResponse(
         event_generator(),
