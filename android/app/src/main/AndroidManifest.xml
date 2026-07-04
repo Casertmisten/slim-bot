@@ -1,8 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 网络访问：dio 调后端 API -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 允许 http 明文流量：开发期后端常用 http://，生产建议改 https 后关闭 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
-        android:label="slim_bot"
+        android:label="减肥教练助手"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
